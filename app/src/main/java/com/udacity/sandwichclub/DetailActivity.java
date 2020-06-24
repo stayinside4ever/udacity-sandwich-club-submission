@@ -3,10 +3,13 @@ package com.udacity.sandwichclub;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.udacity.sandwichclub.model.Sandwich;
 import com.udacity.sandwichclub.utils.JsonUtils;
@@ -24,6 +27,8 @@ public class DetailActivity extends AppCompatActivity {
     TextView mOriginTextView;
     TextView mDescriptionTextView;
     TextView mIngredientsTextView;
+    ImageView ingredientsIv;
+    FrameLayout mProgressBarFrame;
 
 
     @Override
@@ -31,11 +36,12 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        ImageView ingredientsIv = findViewById(R.id.image_iv);
+        ingredientsIv = findViewById(R.id.image_iv);
         mAlsoKnownAsTextView = (TextView) findViewById(R.id.also_known_tv);
         mOriginTextView = (TextView) findViewById(R.id.origin_tv);
         mDescriptionTextView = (TextView) findViewById(R.id.description_tv);
         mIngredientsTextView = (TextView) findViewById(R.id.ingredients_tv);
+        mProgressBarFrame = (FrameLayout) findViewById(R.id.frame_progress_bar);
 
         Intent intent = getIntent();
         if (intent == null) {
@@ -68,7 +74,16 @@ public class DetailActivity extends AppCompatActivity {
         populateUI(sandwich);
         Picasso.with(this)
                 .load(sandwich.getImage())
-                .into(ingredientsIv);
+                .into(ingredientsIv, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        mProgressBarFrame.setVisibility(View.GONE);
+                        ingredientsIv.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onError() { } // empty, required by Callback()
+                });
 
         setTitle(sandwich.getMainName());
     }
@@ -88,7 +103,7 @@ public class DetailActivity extends AppCompatActivity {
             for (int i = 0; i < arrayList.size(); i++) {
                 builder.append(arrayList.get(i));
                 if (i < arrayList.size() - 1) {
-                    builder.append(", ");
+                    builder.append(", "); // last element shouldn't have a comma after it
                 }
             }
         }
@@ -105,9 +120,9 @@ public class DetailActivity extends AppCompatActivity {
             builder.append("-");
         } else {
             for (int i = 0; i < arrayList.size(); i++) {
-                builder.append(i == 0 ? arrayList.get(i) : arrayList.get(i).toLowerCase());
+                builder.append(i == 0 ? arrayList.get(i) : arrayList.get(i).toLowerCase()); // first ingredient should be capitalised
                 if (i < arrayList.size() - 1) {
-                    builder.append(", ");
+                    builder.append(", "); // last element shouldn't have a comma after it
                 }
             }
         }
