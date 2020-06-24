@@ -106,7 +106,8 @@
             app:layout_constraintBaseline_toBaselineOf="@id/detail_ingredients_label"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/detail_place_of_origin_label"
-            tools:text="One ingredient, two ingredients, three ingredients, many ingredients" />
+            tools:text="One ingredient, two ingredients, three ingredients, many ingredients"
+            android:paddingBottom="@dimen/padding_normal"/>
 
         <TextView
             android:id="@+id/also_known_tv"
